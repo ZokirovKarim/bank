@@ -9,6 +9,8 @@ namespace bank
         {
             string ConString = @"Data Source=localhost; Initial Catalog=bankAlif;Integrated Security=true";
             SqlConnection con = new SqlConnection(ConString);
+            
+
             bool sss = true;
             while (sss)
             {
@@ -20,27 +22,44 @@ namespace bank
                 switch (ris)
                 {
                     case "1": Registration( con); break;
-                    case "2": break;
+                    case "2":interUser(con); break;
                     case "3": sss = false; break;
                 }
 
             }
 
         }
-        static void SignIn(SqlConnection con,string Login,string Pass)
+        static void interUser(SqlConnection com)
         {
-            string cm = $"select * from UserInfo where Login={Login}&&Pass={Pass}";
+            Console.Clear();
+            Console.WriteLine("Введите Логин");
+            string Login=Console.ReadLine();
+            Console.WriteLine("Введите Пароль");
+            string Pass=Console.ReadLine();
+            
+
+            SignIn( Login,Pass,com);
+            
+
+        }
+        static void SignIn(string Login,string Pass, SqlConnection con)
+        {
+            con.Open();
+            string cm = $"select * from UserInfo where Login='{Login}' and Pass='{Pass}'";
             SqlCommand cmd = new SqlCommand(cm,con);
             SqlDataReader rd = cmd.ExecuteReader();
             int r = 0;
             while(rd.Read())
             {
                 r++;
+                Console.WriteLine("Дабро пожаловать");
+
             }
             if(r==0)
             {
                 Console.WriteLine("Логин или пароль был введён неправильно!!!!");
             }
+            con.Close();
         }
         static void Registration( SqlConnection con)
         {
@@ -58,7 +77,7 @@ namespace bank
             Console.WriteLine("Пароль");
             string pass=Console.ReadLine();
             Console.WriteLine("Павторине пароль");
-            string pass2=Console.ReadLine();1
+            string pass2=Console.ReadLine();
             if (pass==pass2)
             {
 
@@ -72,11 +91,39 @@ namespace bank
 
 
         }
-        
+        static void InsertRegistration(string SurName, string Name, string MiddleName,  int Phone, string pass, SqlConnection con)
+        {
+            Console.WriteLine("Выберите роль!");
+            Console.WriteLine(""+
+            "1.Администратор\n"+
+            "2.Клиент\n");
+            char x = Console.ReadKey().KeyChar;
+            int rid = x == '1' ? 1 : 2;
+            con.Open();
+            string insertSqlCommand = $"insert into UserInfo(SurName, Name, MiddleName, Login,Pass,RolId,Phone) values('{SurName}','{Name}','{MiddleName}','{Phone}','{pass}',{rid},'{Phone}')";
+            SqlCommand command = new SqlCommand(insertSqlCommand, con);
+            command=new SqlCommand(insertSqlCommand, con);
+
+            
+            var result = command.ExecuteNonQuery();
+            
+            if (result > 0)
+            {
+                Console.Clear();
+                Console.WriteLine("Вы успешно прошли регистрацию");
+                Console.WriteLine($"Фамилия: {SurName} Имя: {Name} Логин: {Phone} Пароль: {pass}");
+
+            }
+            else 
+            {
+                Console.WriteLine("Неудачаный регистрация");
+            }
+            con.Close();
             
 
 
         }
+      
         
     }
 }
