@@ -13,9 +13,7 @@ namespace bank
 
 
 
-            bool sss = true;
-            while (sss)
-            {
+            
                 Console.WriteLine("" +
                 "1.Регистрация\n" +
                 "2.Вход\n" +
@@ -25,10 +23,10 @@ namespace bank
                 {
                     case "1": Registration(con); break;
                     case "2": interUser(con); break;
-                    case "3": sss = false; break;
+                    case "3": break;
                 }
 
-            }
+            
            
 
 
@@ -57,10 +55,12 @@ namespace bank
             {
                 if (rd["RolId"].ToString()=="1")
                 {
+                    AdminPanel();
            
                 }
                 else    
                 {
+                    ClientPanel();
 
                 }
                 r++;
@@ -135,6 +135,21 @@ namespace bank
 
 
 
+        }
+        static void AdminPanel()
+        {
+            Console.Clear();
+            Console.WriteLine(""+
+            "1.Список клиентов"+
+            "2.Удалить клиента"+
+            );
+            Console.ReadKey();
+        }
+        static void ClientPanel()
+        {
+            Console.Clear();
+            Console.WriteLine("Клиент");
+            Console.ReadKey();
         }
 
 
